@@ -5,9 +5,10 @@ import com.example.secondsproject.entity.Article;
 import com.example.secondsproject.repository.ArticleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 @Slf4j
 @RestController
@@ -28,5 +29,27 @@ public class ArticleApiController {
 
         // 저장 엔티티의 id 값 반환!
         return saved.getId();
+    }
+
+    @GetMapping("/api/articles/{id}")
+    public ArticleForm getArticle(@PathVariable Long id) {
+        Article entity = repository.findById(id).orElseThrow( // 만약 없다면,
+                () -> new IllegalArgumentException("해당 Article이 없습니다.") // 에러를 만들어 던진다.
+        );
+
+        return new ArticleForm(entity);
+    }
+
+    @GetMapping("/api/articles")
+    public ArrayList getArticles() {
+        ArrayList list = new ArrayList();
+
+        Iterable<Article> articleList = repository.findAll();
+        Iterator<Article> it = articleList.iterator();
+        while (it.hasNext()) {
+            Article article = it.next();
+            list.add(new ArticleForm(article));
+        }
+        return list;
     }
 }

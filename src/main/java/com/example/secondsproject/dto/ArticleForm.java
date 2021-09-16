@@ -11,9 +11,15 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class ArticleForm {
+    private Long id;
     private String title;
     private String content;
-    private String author;
+
+    public ArticleForm(Article entity) {
+        this.id = entity.getId();
+        this.title = entity.getTitle();
+        this.content = entity.getContent();
+    }
 
     public Article toEntity() {
         return Article.builder()
