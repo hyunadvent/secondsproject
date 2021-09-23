@@ -35,17 +35,17 @@ public class ArticleApiController {
     public Long update(@PathVariable Long id, @RequestBody ArticleForm form) {
         log.info(form.toString());
 
-        Article article = form.toEntity();
-        Article target = repository.findById(id).orElse(null);
-        Article saved;
+        // 해당 id로 기존 데이터를 가져옴!
+        Article target = repository.findById(id)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("해당 Article이 없습니다.")
+                );
+        log.info("target: " + target.toString());
 
-        if(target == null) {
-            saved = repository.save(article);
-        } else {
-            target.setTitle(article.getTitle());
-            target.setContent(article.getContent());
-            saved = repository.save(target);
-        }
+        // 재 작성 및 저장!
+        target.rewrite(form.getTitle(), form.getContent());
+        Article saved = repository.save(target);
+        log.info("saved: " + saved.toString());
 
         return saved.getId();
     }
