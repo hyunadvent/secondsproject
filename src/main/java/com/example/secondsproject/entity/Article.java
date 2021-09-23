@@ -1,13 +1,11 @@
 package com.example.secondsproject.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @Entity

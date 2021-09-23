@@ -31,6 +31,21 @@ public class ArticleApiController {
         return saved.getId();
     }
 
+    @PutMapping("/api/articles/{id}")
+    public Long update(@PathVariable Long id, @RequestBody ArticleForm form) {
+        log.info(form.toString());
+
+        Article article = form.toEntity();
+        Article target = repository.findById(id).orElse(
+            repository.save(article)
+        );
+        target.setTitle(article.getTitle());
+        target.setContent(article.getContent());
+        Article saved = repository.save(target);
+
+        return saved.getId();
+    }
+
     @GetMapping("/api/articles/{id}")
     public ArticleForm getArticle(@PathVariable Long id) {
         Article entity = repository.findById(id).orElseThrow( // 만약 없다면,
@@ -52,4 +67,5 @@ public class ArticleApiController {
         }
         return list;
     }
+
 }
