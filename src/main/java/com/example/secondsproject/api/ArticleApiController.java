@@ -36,12 +36,16 @@ public class ArticleApiController {
         log.info(form.toString());
 
         Article article = form.toEntity();
-        Article target = repository.findById(id).orElse(
-            repository.save(article)
-        );
-        target.setTitle(article.getTitle());
-        target.setContent(article.getContent());
-        Article saved = repository.save(target);
+        Article target = repository.findById(id).orElse(null);
+        Article saved;
+
+        if(target == null) {
+            saved = repository.save(article);
+        } else {
+            target.setTitle(article.getTitle());
+            target.setContent(article.getContent());
+            saved = repository.save(target);
+        }
 
         return saved.getId();
     }
